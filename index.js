@@ -30,29 +30,30 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const userCollection =client.db("coffeesDB").collection("coffees")
+    const userCoffees =client.db("coffeesDB").collection("coffees")
+    const userCollection =client.db("coffeesBD").collection("users")
     
     app.post('/coffees',async(req,res)=>{
       const newCoffee =req.body;
-      const result =await userCollection.insertOne(newCoffee);
+      const result =await userCoffees.insertOne(newCoffee);
       res.send(result)
     })
 
     app.delete('/coffees/:id',async(req,res)=>{
       const id =req.params.id;
       const query={_id: new ObjectId(id)};
-      const result =await userCollection.deleteOne(query)
+      const result =await userCoffees.deleteOne(query)
       res.send(result)
     })
 
     app.get('/coffees',async(req,res)=>{
-      const result=await userCollection.find().toArray()
+      const result=await userCoffees.find().toArray()
       res.send(result)
     })
     app.get('/coffees/:id',async(req,res)=>{
       const id=req.params.id;
       const query={_id: new ObjectId(id)}
-      const result =await userCollection.findOne(query)
+      const result =await userCoffees.findOne(query)
       res.send(result)
     })
 
@@ -65,7 +66,14 @@ async function run() {
       const updateDoc={
         $set:updateCoffee
       };
-      const result =await userCollection.updateOne(filter,updateDoc,options)
+      const result =await userCoffees.updateOne(filter,updateDoc,options)
+      res.send(result)
+    })
+
+    // user Db 
+    app.post('/users',async(req,res)=>{
+      const user =req.body
+      const result=await userCollection.insertOne(user)
       res.send(result)
     })
 
