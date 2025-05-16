@@ -83,6 +83,19 @@ async function run() {
       const result=await userCollection.deleteOne(query);
       res.send(result)
     })
+
+    // update one by data base 
+    app.patch('/users',async(req,res)=>{
+      const {email,lastSignInTime}=req.body;
+      const filter ={email:email};
+      const updateDoc ={
+        $set:{
+          lastSignInTime:lastSignInTime
+        }
+      };
+      const result = await userCollection.updateOne(filter,updateDoc)
+      res.send(result)
+    })
     
     app.post('/users',async(req,res)=>{
       const user =req.body
